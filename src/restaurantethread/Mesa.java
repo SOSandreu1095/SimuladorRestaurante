@@ -5,6 +5,9 @@
  */
 package restaurantethread;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Andreu
@@ -26,15 +29,16 @@ public class Mesa {
      *
      * @return True si se puede (maximo 50 platos), sino devuelve false
      */
-    public synchronized boolean addPlato() {
-        if (cabenPlatos()){
-            this.numPlatos++;
-            //System.out.println("Plato added - Total: " + this.numPlatos);
-            notifyAll();
-            return true;
+    public synchronized void addPlato() {
+        while (!cabenPlatos()) {
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Mesa.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        this.numPlatos++;
         notifyAll();
-        return false;
     }
 
     /**
@@ -42,29 +46,27 @@ public class Mesa {
      *
      * @return True si se puede (minimo 0 platos), sino devuelve false
      */
-    public synchronized boolean cogerPlato() {
-        if (hayPlatos()){
-            this.numPlatos--;
-            //System.out.println("\tPlato comido - Restantes: "+this.numPlatos);
-            notifyAll();
-            return true;
+    public synchronized void cogerPlato() {
+        while (!hayPlatos()) {
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Mesa.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        this.numPlatos--;
         notifyAll();
-        return false;        
     }
 
-    public synchronized int getNumPlatos() {
-        notifyAll();
+    public int getNumPlatos() {
         return this.numPlatos;
     }
 
-    public synchronized boolean hayPlatos() {
-        notifyAll();
+    public boolean hayPlatos() {
         return this.numPlatos > 0;
     }
 
-    public synchronized boolean cabenPlatos() {
-        notifyAll();
+    public boolean cabenPlatos() {
         return this.numPlatos < this.MAX_PLATOS;
     }
 

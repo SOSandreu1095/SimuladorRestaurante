@@ -39,17 +39,11 @@ public class Cliente implements Runnable {
     public void run() {
         while (simulador.isRunning()) {
             while (!simulador.isPaused()) {
-                //System.out.println(mesa.hayPlatos());
-                if (mesa.cogerPlato()) {
-                    comer();
-                    descansar();
-                }
+                mesa.cogerPlato();
+                comer();
+                descansar();
             }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            sleepMilSec(100);
         }
     }
 
@@ -58,16 +52,11 @@ public class Cliente implements Runnable {
      * correspondiente al tiempo que tarda un cliente en comerse el plato
      */
     public void comer() {
-//        mesa.cogerPlato();
-        try {
-            comiendo = true;
-            Thread.sleep(this.tiempoComer * 1000); //1000 = 1 sec
-            comiendo = false;
-            simulador.incrementarHamburguesasComidas();
-            simulador.incrementarTiempoComiendo(tiempoComer);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        comiendo = true;
+        sleepMilSec(this.tiempoComer * 1000); //1000 = 1 sec
+        comiendo = false;
+        simulador.incrementarHamburguesasComidas();
+        simulador.incrementarTiempoComiendo(tiempoComer);
     }
 
     /**
@@ -75,15 +64,10 @@ public class Cliente implements Runnable {
      * de digestion del cliente
      */
     public void descansar() {
-        try {
-            descansando = true;
-            Thread.sleep(this.tiempoDigestion * 1000); //1000 = 1 sec
-            descansando = false;
-            simulador.incrementarTiempoDescansando(tiempoDigestion);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Cliente.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
+        descansando = true;
+        sleepMilSec(this.tiempoDigestion * 1000); //1000 = 1 sec
+        descansando = false;
+        simulador.incrementarTiempoDescansando(tiempoDigestion);
     }
 
     public boolean estaComiendo() {
@@ -106,4 +90,11 @@ public class Cliente implements Runnable {
         return (min + (int) (Math.random() * max));
     }
 
+    private void sleepMilSec(int sec) {
+        try {
+            Thread.sleep(sec);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

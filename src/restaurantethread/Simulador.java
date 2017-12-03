@@ -36,7 +36,7 @@ public class Simulador extends JFrame implements ActionListener {
     private final int max_clientes = 100;
     private Restaurante restaurante; //Canvas
     private Mesa mesa;
-    
+
     //Estadisticas
     private int hamburguesasComidas;
     private int hamburguesasCocinadas;
@@ -108,7 +108,7 @@ public class Simulador extends JFrame implements ActionListener {
 
         //CANVAS
         cp.add(this.restaurante);
-        
+
         //Estadisitca
         jPanEst.add(estadistica.getTableHeader(), BorderLayout.NORTH);
         jPanEst.add(estadistica, BorderLayout.CENTER);
@@ -163,6 +163,7 @@ public class Simulador extends JFrame implements ActionListener {
                 System.out.println("Reset Button");
                 reiniciarEstadisticas();
                 this.running = false;
+                this.paused = true;
                 break;
         }
     }
@@ -176,19 +177,19 @@ public class Simulador extends JFrame implements ActionListener {
     public boolean estaCocineroCocinando(int i) {
         return this.cocineros[i].estaCocinando();
     }
-    
-    public int getHamburguesasMesa(){
+
+    public int getHamburguesasMesa() {
         return this.mesa.getNumPlatos();
     }
-    
-    public boolean estaComiendoCliente(int i){
+
+    public boolean estaComiendoCliente(int i) {
         return this.clientes[i].estaComiendo();
     }
-    
-    public boolean estaDescansandoCliente(int i){
+
+    public boolean estaDescansandoCliente(int i) {
         return this.clientes[i].estaDescansando();
     }
-    
+
     //Estadisticas
     public int getMax_cocineros() {
         return max_cocineros;
@@ -237,15 +238,13 @@ public class Simulador extends JFrame implements ActionListener {
     public void incrementarTiempoDescansando(int tiempoDescansando) {
         this.tiempoDescansando += tiempoDescansando;
     }
-    
-    private void reiniciarEstadisticas(){
+
+    private void reiniciarEstadisticas() {
         this.hamburguesasComidas = 0;
         this.hamburguesasCocinadas = 0;
         this.tiempoCocinando = 0;
         this.tiempoComiendo = 0;
         this.tiempoDescansando = 0;
     }
-    
-    
-    
+
 }

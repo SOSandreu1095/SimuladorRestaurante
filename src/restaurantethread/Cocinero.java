@@ -37,21 +37,15 @@ public class Cocinero implements Runnable {
     public synchronized void run() {
         while (simulador.isRunning()) {
             while (!simulador.isPaused()) {
+
                 if (numHamburguesasPreparadas > 0) {
-                    if (mesa.addPlato()) {
-                        numHamburguesasPreparadas--;
-                    }
+                    mesa.addPlato();
+                    numHamburguesasPreparadas--;
                 } else {
-                    //System.out.println("Cocinando..");
                     cocinar();
-                    //System.out.println("Preparados..");
                 }
             }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Cocinero.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            sleepMilSec(100);
         }
     }
 
@@ -60,20 +54,15 @@ public class Cocinero implements Runnable {
      * determinado (tiempo de Cocinar)
      */
     public void cocinar() {
-        try {
-            cocinando = true;
-            Thread.sleep(tiempoCocinar * 1000); //1000 = 1 sec
-            numHamburguesasPreparadas = 10;
-            cocinando = false;
-            simulador.incrementarHamburguesasCocinadas(10);
-            simulador.incrementariempoCocinando(tiempoCocinar);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Cocinero.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        cocinando = true;
+        sleepMilSec(tiempoCocinar * 1000); //1000 = 1 sec
+        numHamburguesasPreparadas = 10;
+        cocinando = false;
+        simulador.incrementarHamburguesasCocinadas(10);
+        simulador.incrementariempoCocinando(tiempoCocinar);
     }
-    
-    
-    public boolean estaCocinando(){
+
+    public boolean estaCocinando() {
         return cocinando;
     }
 
@@ -89,4 +78,11 @@ public class Cocinero implements Runnable {
         return (min + (int) (Math.random() * max));
     }
 
+    private void sleepMilSec(int sec) {
+        try {
+            Thread.sleep(sec);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
